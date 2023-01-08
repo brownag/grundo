@@ -1,0 +1,15 @@
+Package: grundo
+Type: Package
+Title: Digital Soil Mapping (DSM) From The Ground Up!
+Version: 0.1.0
+Author: Andrew Brown
+Maintainer: Andrew Brown <brown.andrewg@gmail.com>
+Description: Simplified utilities for creating gridded maps of soils, with a focus on tools for fitting and evaluating models that predict soil properties and classes.
+License: CC0
+Imports: methods, stats, terra, gstat
+Suggests: sf, stars, Cubist, ranger
+Encoding: UTF-8
+Language: en-US
+Roxygen: list(markdown = TRUE)
+LazyData: true
+RoxygenNote: 7.2.3

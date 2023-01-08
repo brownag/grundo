@@ -1,0 +1,133 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%",
+  eval = requireNamespace("sp", quietly = TRUE)
+)
+```
+
+# {grundo}
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+Welcome to the "{grundo} mundo." The goal of {grundo} is to provide a simple, modern R interface for creating gridded maps of soils, with a focus on preparing observational data for statistical analysis and evaluating the models that predict soil properties or classes. 
+
+The package also seeks to provide a light compatibility layer between the {terra} and {gstat} packages. Note you do not need to use {terra} classes, {sf}, {sp}, and {stars} are fully supported.
+
+# {grundo} Models
+
+A {grundo} model includes a primary model trained to predict `variable` using values extracted from `predictors` at `samples` locations. This model is selected with the `model` argument from one of several options described in subsequent sections.
+
+Each run of `grundo::grundo()` includes an ordinary kriging step to interpolate residuals from the primary model and estimate the spatial pattern of the errors in the training area. 
+
+The first layer of resulting prediction `SpatRaster` is the primary model prediction. The second layer is the interpolated residuals, and generally will have positive and negative values distributed around zero. The sum of the two grids will give a more realistic estimate of values in the training area given the known, observed point values. 
+
+ - If there is no significant spatial component to the errors, the residual kriging value is the mean value of the residual errors from the training data. This mean error value is also assumed for predictions made outside the extent of the training data.
+
+## Installation
+
+You can install the development version of {grundo} from GitHub with {remotes}:
+
+``` r
+if (!require("remotes")) install.packages("remotes")
+remotes::install_github("brownag/grundo")
+```
+
+## Example
+
+This example uses the classic `meuse` dataset to demonstrate prediction of surface soil organic matter content (%) along the Meuse River.
+
+```{r example}
+library(grundo)
+library(terra)
+
+# uses classic `meuse` datasets from {sp} package
+data(meuse, package = "sp")
+data(meuse.grid, package = "sp")
+```
+
+# Dependent Variable
+
+First we select a dependent variable that is a soil property, such as `"om"` (surface soil organic matter percentage). 
+
+```{r dependent-var}
+variable <- "om"
+```
+
+# Predictors and Samples
+
+Next we will set up a {terra} `SpatRaster` containing the grids of our predictors, and a `SpatVector` of points where soil properties have been measured. For this example we construct these objects from `data.frame` datasets defined in the {sp} package.
+
+```{r predictors-and-samples1}
+predictors <- rast(meuse.grid, crs = "EPSG:28992")
+samples <- vect(meuse, geom = c("x", "y"), crs = "EPSG:28992")
+
+# remove observations that are missing organic matter %
+samples <- samples[!is.na(samples[[variable]][[1]]), ]
+
+# visual inspection
+plot(predictors[[3]])
+points(samples, pch = "+", cex = 1)
+```
+
+There are several other soil properties of interest that can be used, see `names(samples)` 
+
+```{r predictors-and-samples2}
+names(predictors)
+names(samples)
+```
+
+# Models
+
+## Cubist model with `Cubist::cubist()`
+
+`grundo()` supports {Cubist} models with `model="cubist"`
+
+```{r cubist-meuse}
+# cubist with {Cubist} + OK residuals
+x <- grundo(
+  predictors = predictors,
+  samples = samples,
+  variable = variable,
+  model = "cubist",
+  vgm_model = "Exp"
+)
+
+plot(x$result)
+plot(sum(x$result))
+```
+
+## Random Forest model with `ranger::ranger()`
+
+`grundo()` supports {ranger} (Random Forest) models with `model="ranger"`
+
+```{r ranger-meuse}
+# random forest with {ranger} + OK residuals
+y <- grundo(
+  predictors = predictors,
+  samples = samples,
+  variable = variable,
+  model = "ranger",
+  vgm_model = "Exp"
+)
+
+plot(y$result)
+plot(sum(y$result))
+```
+
+## `grundo()` "Ensemble"
+
+We can take the average of several `grundo()` runs for an "ensemble" estimate.
+
+```{r meuse-ensemble}
+plot(mean(c(sum(x$result), sum(y$result))))
+```
