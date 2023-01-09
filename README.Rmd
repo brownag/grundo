@@ -103,7 +103,7 @@ x <- grundo(
 )
 
 plot(x$result)
-plot(sum(x$result))
+plot(sum(x$result[[1:2]]))
 ```
 
 ## Random Forest model with `ranger::ranger()`
@@ -121,7 +121,7 @@ y <- grundo(
 )
 
 plot(y$result)
-plot(sum(y$result))
+plot(sum(y$result[[1:2]]))
 ```
 
 ## `grundo()` "Ensemble"
@@ -129,5 +129,5 @@ plot(sum(y$result))
 We can take the average of several `grundo()` runs for an "ensemble" estimate.
 
 ```{r meuse-ensemble}
-plot(mean(c(sum(x$result), sum(y$result))))
+plot(mean(c(sum(x$result[[1:2]]), sum(y$result[[1:2]]))))
 ```

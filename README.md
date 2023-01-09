@@ -32,10 +32,10 @@ generally will have positive and negative values distributed around
 zero. The sum of the two grids will give a more realistic estimate of
 values in the training area given the known, observed point values.
 
-- If there is no significant spatial component to the errors, the
-  residual kriging value is the mean value of the residual errors from
-  the training data. This mean error value is also assumed for
-  predictions made outside the extent of the training data.
+-   If there is no significant spatial component to the errors, the
+    residual kriging value is the mean value of the residual errors from
+    the training data. This mean error value is also assumed for
+    predictions made outside the extent of the training data.
 
 ## Installation
 
@@ -55,7 +55,8 @@ of surface soil organic matter content (%) along the Meuse River.
 ``` r
 library(grundo)
 library(terra)
-#> terra 1.6.47
+#> Warning: package 'terra' was built under R version 4.2.2
+#> terra 1.6.49
 
 # uses classic `meuse` datasets from {sp} package
 data(meuse, package = "sp")
@@ -132,7 +133,7 @@ plot(x$result)
 <img src="man/figures/README-cubist-meuse-1.png" width="100%" />
 
 ``` r
-plot(sum(x$result))
+plot(sum(x$result[[1:2]]))
 ```
 
 <img src="man/figures/README-cubist-meuse-2.png" width="100%" />
@@ -164,7 +165,7 @@ plot(y$result)
 <img src="man/figures/README-ranger-meuse-1.png" width="100%" />
 
 ``` r
-plot(sum(y$result))
+plot(sum(y$result[[1:2]]))
 ```
 
 <img src="man/figures/README-ranger-meuse-2.png" width="100%" />
@@ -175,7 +176,7 @@ We can take the average of several `grundo()` runs for an “ensemble”
 estimate.
 
 ``` r
-plot(mean(c(sum(x$result), sum(y$result))))
+plot(mean(c(sum(x$result[[1:2]]), sum(y$result[[1:2]]))))
 ```
 
 <img src="man/figures/README-meuse-ensemble-1.png" width="100%" />
