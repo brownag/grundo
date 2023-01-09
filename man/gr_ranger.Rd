@@ -14,7 +14,7 @@ gr_ranger(mf, variable, predvars = NULL)
 \item{predvars}{Optional: subset of predictor columns from \code{mf} to use in model fitting}
 }
 \value{
-an object of class \code{cubist} with attribute \code{"grundo_model"} \code{"ranger::ranger"}
+an object of class \code{ranger} with attribute \code{"grundo_model"} \code{"ranger::ranger"}
 }
 \description{
 Wrapper method for fitting a \code{ranger::ranger()} model on standard model frame.

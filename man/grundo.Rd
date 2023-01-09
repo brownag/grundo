@@ -6,13 +6,7 @@
 \alias{grundo-package}
 \title{grundo: Digital Soil Mapping (DSM) From The Ground Up!}
 \usage{
-grundo(
-  predictors,
-  samples,
-  variable,
-  model = "cubist",
-  vgm_model = vgm_models()
-)
+grundo(predictors, samples, variable, model, vgm_model = gstat::vgm(), ...)
 }
 \arguments{
 \item{predictors}{\code{SpatRaster} (or coercible to one)}
@@ -23,10 +17,12 @@ grundo(
 
 \item{model}{Primary model selection choice. Includes: \code{"cubist"} (default), \code{"ranger"} ...}
 
-\item{vgm_model}{Variogram model selection choice for ordinary kriging of primary model residuals, see \code{\link[gstat:vgm]{gstat::vgm()}} for details}
+\item{vgm_model}{Variogram model selection choices for ordinary kriging of primary model residuals, see \code{\link[gstat:vgm]{gstat::vgm()}} for details}
+
+\item{...}{Additional arguments passed to \verb{[gstat::gstat()]}}
 }
 \value{
-a \code{list} object of class \code{"grundo"}
+an object of class \code{"grundo"}
 }
 \description{
 Simplified utilities for creating gridded maps of soils, with a focus on tools for fitting and evaluating models that predict soil properties and classes.

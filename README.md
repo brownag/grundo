@@ -98,6 +98,7 @@ see `names(samples)`
 ``` r
 names(predictors)
 #> [1] "part.a" "part.b" "dist"   "soil"   "ffreq"
+
 names(samples)
 #>  [1] "cadmium" "copper"  "lead"    "zinc"    "elev"    "dist"    "om"     
 #>  [8] "ffreq"   "soil"    "lime"    "landuse" "dist.m"
@@ -118,11 +119,11 @@ x <- grundo(
   model = "cubist",
   vgm_model = "Exp"
 )
-#> Loading required namespace: sf
-#> Loading required namespace: stars
 #> Loading required namespace: Cubist
-#> Warning in gstat::fit.variogram(gstat::variogram(rfm, data = krige_cal_data), :
-#> No convergence after 200 iterations: try different initial values?
+#> Warning in gstat::fit.variogram(grundo::variogram(samples, rfm),
+#> gstat::vgm(vgm_model)): No convergence after 200 iterations: try different
+#> initial values?
+#> [using ordinary kriging]
 #> [using ordinary kriging]
 
 plot(x$result)
@@ -154,6 +155,7 @@ y <- grundo(
 #> Warning in lapply(r, as.numeric): NAs introduced by coercion
 
 #> Warning in lapply(r, as.numeric): NAs introduced by coercion
+#> [using ordinary kriging]
 #> [using ordinary kriging]
 
 plot(y$result)

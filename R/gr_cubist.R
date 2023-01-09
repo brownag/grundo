@@ -1,4 +1,4 @@
-#' Cubist Model
+#' Cubist Model (`Cubist`)
 #'
 #' Wrapper method for fitting a `Cubist::cubist()` model on standard model frame.
 #'

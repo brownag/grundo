@@ -6,7 +6,7 @@
 #' @param variable `character` Observation Column name
 #' @param predvars Optional: subset of predictor columns from `mf` to use in model fitting
 #'
-#' @return an object of class `cubist` with attribute `"grundo_model"` `"ranger::ranger"`
+#' @return an object of class `ranger` with attribute `"grundo_model"` `"ranger::ranger"`
 #' @export
 gr_ranger <- function(mf, variable, predvars = NULL) {
   if (!requireNamespace("ranger")) {

@@ -83,9 +83,9 @@ There are several other soil properties of interest that can be used, see `names
 
 ```{r predictors-and-samples2}
 names(predictors)
+
 names(samples)
 ```
-
 # Models
 
 ## Cubist model with `Cubist::cubist()`

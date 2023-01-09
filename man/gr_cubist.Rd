@@ -2,7 +2,7 @@
 % Please edit documentation in R/gr_cubist.R
 \name{gr_cubist}
 \alias{gr_cubist}
-\title{Cubist Model}
+\title{Cubist Model (\code{Cubist})}
 \usage{
 gr_cubist(mf, variable, predvars = NULL)
 }
