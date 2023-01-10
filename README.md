@@ -32,10 +32,10 @@ generally will have positive and negative values distributed around
 zero. The sum of the two grids will give a more realistic estimate of
 values in the training area given the known, observed point values.
 
--   If there is no significant spatial component to the errors, the
-    residual kriging value is the mean value of the residual errors from
-    the training data. This mean error value is also assumed for
-    predictions made outside the extent of the training data.
+- If there is no significant spatial component to the errors, the
+  residual kriging value is the mean value of the residual errors from
+  the training data. This mean error value is also assumed for
+  predictions made outside the extent of the training data.
 
 ## Installation
 
@@ -50,17 +50,23 @@ remotes::install_github("brownag/grundo")
 ## Example
 
 This example uses the classic `meuse` dataset to demonstrate prediction
-of surface soil organic matter content (%) along the Meuse River.
+of surface soil organic matter content (%) along the Meuse River. These
+datasets have been augmented with additional DEM-derived (SRTM) data for
+more continuous numeric predictors.
 
 ``` r
 library(grundo)
 library(terra)
-#> Warning: package 'terra' was built under R version 4.2.2
-#> terra 1.6.49
+#> terra 1.6.47
 
-# uses classic `meuse` datasets from {sp} package
-data(meuse, package = "sp")
-data(meuse.grid, package = "sp")
+samples <- vect(system.file("extdata", "meuse.gpkg", package = "grundo"))
+predictors <- rast(system.file("extdata", "meuse.grid.ex.tif", package = "grundo"))
+
+## to use classic `meuse` datasets from {sp} package
+# data(meuse, package = "sp")
+# data(meuse.grid, package = "sp")
+# predictors <- rast(meuse.grid, crs = "EPSG:28992")
+# samples <- vect(meuse, geom = c("x", "y"), crs = "EPSG:28992")
 ```
 
 # Dependent Variable
@@ -80,9 +86,6 @@ measured. For this example we construct these objects from `data.frame`
 datasets defined in the {sp} package.
 
 ``` r
-predictors <- rast(meuse.grid, crs = "EPSG:28992")
-samples <- vect(meuse, geom = c("x", "y"), crs = "EPSG:28992")
-
 # remove observations that are missing organic matter %
 samples <- samples[!is.na(samples[[variable]][[1]]), ]
 
@@ -98,11 +101,13 @@ see `names(samples)`
 
 ``` r
 names(predictors)
-#> [1] "part.a" "part.b" "dist"   "soil"   "ffreq"
+#> [1] "part.a"    "part.b"    "dist"      "soil"      "ffreq"     "elevation"
+#> [7] "slope"
 
 names(samples)
-#>  [1] "cadmium" "copper"  "lead"    "zinc"    "elev"    "dist"    "om"     
-#>  [8] "ffreq"   "soil"    "lime"    "landuse" "dist.m"
+#>  [1] "cadmium"   "copper"    "lead"      "zinc"      "elev"      "om"       
+#>  [7] "lime"      "landuse"   "dist.m"    "ID"        "part.a"    "part.b"   
+#> [13] "dist"      "soil"      "ffreq"     "elevation" "slope"
 ```
 
 # Models
@@ -156,6 +161,9 @@ y <- grundo(
 #> Warning in lapply(r, as.numeric): NAs introduced by coercion
 
 #> Warning in lapply(r, as.numeric): NAs introduced by coercion
+#> Warning in gstat::fit.variogram(grundo::variogram(samples, rfm),
+#> gstat::vgm(vgm_model)): No convergence after 200 iterations: try different
+#> initial values?
 #> [using ordinary kriging]
 #> [using ordinary kriging]
 
